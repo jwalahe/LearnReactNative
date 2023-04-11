@@ -1,16 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, StyleSheet, View, Button, FlatList } from "react-native";
+import { AsyncStorage } from "react-native";
+// AsyncStorage is a simple, unencrypted, asynchronous, persistent, key-value storage system that is global to the app.
+// It should be used instead of LocalStorage.
 
 const ColorScreen = () => {
+  useEffect(() => {
+    loadColors();
+  }, []);
+  const addColor = () => {
+    const newColors = [...colors, randomRgb()];
+    setColors(newColors);
+    AsyncStorage.setItem("colors", JSON.stringify(newColors));
+  };
+  const loadColors = async () => {
+    const savedColors = await AsyncStorage.getItem("colors");
+    if (savedColors) {
+      setColors(JSON.parse(savedColors));
+    }
+  };
+
   const [colors, setColors] = useState([]);
   return (
     <View>
       <Button
         title="Add a Color"
         onPress={() => {
-          setColors([...colors, randomRgb()]);
+          addColor();
         }}
       />
+      <Button title="Clear Colors" onPress={() => setColors([])} />
       <FlatList
         keyExtractor={(item) => item}
         data={colors}
