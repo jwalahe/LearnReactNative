@@ -8,6 +8,7 @@ const ColorScreen = () => {
   useEffect(() => {
     loadColors();
   }, []);
+
   const addColor = () => {
     const newColors = [...colors, randomRgb()];
     setColors(newColors);
@@ -20,6 +21,11 @@ const ColorScreen = () => {
     }
   };
 
+  const clearColors = async () => {
+    await AsyncStorage.removeItem("colors");
+    setColors([]);
+  };
+
   const [colors, setColors] = useState([]);
   return (
     <View>
@@ -29,7 +35,12 @@ const ColorScreen = () => {
           addColor();
         }}
       />
-      <Button title="Clear Colors" onPress={() => setColors([])} />
+      <Button
+        title="Clear Colors"
+        onPress={() => {
+          clearColors();
+        }}
+      />
       <FlatList
         keyExtractor={(item) => item}
         data={colors}
