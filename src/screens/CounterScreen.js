@@ -1,15 +1,30 @@
-import React, { useState } from "react";
+import React, { useReducer } from "react";
 import { Text, StyleSheet, View, Button } from "react-native";
+
+const VALUE_INCREMENT = 1;
+
+const changeValue = (state, action) => {
+  return { ...state, value: state.value + action.payload };
+};
 
 const CounterScreen = () => {
   // todo: fix this
   // We need a way to update the state of the counter
-  const [counter, setCounter] = useState(0);
+
+  const [state, dispatch] = useReducer(changeValue, { value: 0 });
   return (
     <View>
-      <Button title="Increase" onPress={() => setCounter(counter + 1)} />
-      <Button title="Decrease" onPress={() => setCounter(counter - 1)} />
-      <Text style={styles.text}>Current Count: {counter}</Text>
+      <Button
+        title="Increase"
+        onPress={() => dispatch({ type: "increase", payload: VALUE_INCREMENT })}
+      />
+      <Button
+        title="Decrease"
+        onPress={() =>
+          dispatch({ type: "increase", payload: -1 * VALUE_INCREMENT })
+        }
+      />
+      <Text style={styles.text}>Current Count: {state.value}</Text>
     </View>
   );
 };
